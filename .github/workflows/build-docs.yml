@@ -37,6 +37,9 @@ jobs:
           bundler-cache: false
           working-directory: api
 
+      - name: Update RubyGems
+        run: gem update --system 3.2.3
+
       - name: Install dependencies
         working-directory: api
         run: bundle install --jobs 4 --retry 3
