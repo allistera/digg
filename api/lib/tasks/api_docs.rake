@@ -1,7 +1,8 @@
 namespace :api_docs do
   desc 'Generate OpenAPI documentation from RSpec specs'
   task generate: :environment do
-    require 'rswag/specs/rake_task'
+    require 'rspec/core/rake_task'
+
     RSpec::Core::RakeTask.new(:api_specs) do |t|
       t.pattern = 'spec/integration/**/*_spec.rb'
       t.rspec_opts = ['--format Rswag::Specs::SwaggerFormatter', '--order defined']
