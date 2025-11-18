@@ -1,0 +1,87 @@
+name: Build API Documentation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: digg_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+          bundler-cache: false
+          working-directory: api
+
+      - name: Install dependencies
+        working-directory: api
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Load database schema
+        working-directory: api
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/digg_test
+        run: |
+          psql $DATABASE_URL -f ../schema.sql
+
+      - name: Generate API documentation
+        working-directory: api
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/digg_test
+        run: |
+          bundle exec rake api_docs:generate
+
+      - name: Validate API documentation
+        working-directory: api
+        env:
+          RAILS_ENV: test
+        run: |
+          bundle exec rake api_docs:validate
+
+      - name: Upload OpenAPI documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-documentation
+          path: api/swagger/v1/swagger.yaml
+          retention-days: 90
+
+      - name: Upload documentation summary
+        if: success()
+        run: |
+          echo "## API Documentation Generated Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "OpenAPI documentation has been generated and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Download" >> $GITHUB_STEP_SUMMARY
+          echo "Download the \`api-documentation\` artifact from the workflow run to get the \`swagger.yaml\` file." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Usage" >> $GITHUB_STEP_SUMMARY
+          echo "- Import into Postman, Insomnia, or other API tools" >> $GITHUB_STEP_SUMMARY
+          echo "- Generate client SDKs" >> $GITHUB_STEP_SUMMARY
+          echo "- View in Swagger Editor: https://editor.swagger.io/" >> $GITHUB_STEP_SUMMARY
