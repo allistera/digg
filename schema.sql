@@ -5,10 +5,11 @@ CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password_digest VARCHAR(255) NOT NULL,
     display_name VARCHAR(100),
     avatar_url VARCHAR(500),
     bio TEXT,
+    website_url VARCHAR(500),
     karma_score INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -51,7 +52,7 @@ CREATE TABLE articles (
     view_count INTEGER DEFAULT 0,
     hotness_score FLOAT DEFAULT 0.0,
     status VARCHAR(20) DEFAULT 'pending', -- pending, approved, rejected, deleted
-    submitted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     published_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -60,7 +61,7 @@ CREATE INDEX idx_articles_user ON articles(user_id);
 CREATE INDEX idx_articles_category ON articles(category_id);
 CREATE INDEX idx_articles_hotness ON articles(hotness_score DESC);
 CREATE INDEX idx_articles_vote_count ON articles(vote_count DESC);
-CREATE INDEX idx_articles_submitted ON articles(submitted_at DESC);
+CREATE INDEX idx_articles_created ON articles(created_at DESC);
 CREATE INDEX idx_articles_status ON articles(status);
 CREATE INDEX idx_articles_domain ON articles(domain);
 

@@ -7,12 +7,14 @@ Database structure for a Digg-like social news platform where members can submit
 
 ### users
 Member profiles with karma scoring, authentication, and verification status
+- Uses `password_digest` for bcrypt authentication (Rails has_secure_password)
 - Tracks karma score for reputation system
-- Includes avatar, bio, and profile information
+- Includes avatar, bio, website_url, and profile information
 - Supports account verification and active/inactive states
 
 ### articles
 Submitted content with comprehensive metadata:
+- Uses `created_at` timestamp (Rails convention) instead of `submitted_at`
 - Vote/comment/view counters (denormalized for performance)
 - Hotness score for ranking algorithms
 - Status workflow (pending → approved → published)

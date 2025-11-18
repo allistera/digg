@@ -104,7 +104,13 @@ RSpec.describe 'Articles API', type: :request do
       end
 
       response '422', 'invalid request' do
+        let!(:user) { create(:user) }
         let(:article) { { article: { title: 'Short', url: 'invalid-url' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end
