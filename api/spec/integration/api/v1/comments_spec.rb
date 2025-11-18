@@ -67,13 +67,21 @@ RSpec.describe 'Comments API', type: :request do
       response '201', 'comment created' do
         schema '$ref' => '#/components/schemas/Comment'
 
-        let(:article_id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:article) { create(:article) }
+        let(:article_id) { article.id }
         let(:comment) { { comment: { content: 'Great article! Thanks for sharing.' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:article_id) { 1 }
+        let!(:article) { create(:article) }
+        let(:article_id) { article.id }
         let(:comment) { { comment: { content: 'Test comment' } } }
         run_test!
       end
@@ -121,20 +129,36 @@ RSpec.describe 'Comments API', type: :request do
       }
 
       response '200', 'comment updated' do
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:comment_record) { create(:comment, user: user) }
+        let(:id) { comment_record.id }
         let(:comment) { { comment: { content: 'Updated comment text' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:comment_record) { create(:comment) }
+        let(:id) { comment_record.id }
         let(:comment) { { comment: { content: 'Updated text' } } }
         run_test!
       end
 
       response '403', 'forbidden' do
-        let(:id) { 2 }
+        let!(:user) { create(:user) }
+        let!(:other_user) { create(:user) }
+        let!(:comment_record) { create(:comment, user: other_user) }
+        let(:id) { comment_record.id }
         let(:comment) { { comment: { content: 'Updated text' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end
@@ -151,12 +175,20 @@ RSpec.describe 'Comments API', type: :request do
             message: { type: :string }
           }
 
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:comment_record) { create(:comment, user: user) }
+        let(:id) { comment_record.id }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:comment_record) { create(:comment) }
+        let(:id) { comment_record.id }
         run_test!
       end
     end
@@ -185,13 +217,21 @@ RSpec.describe 'Comments API', type: :request do
             vote_count: { type: :integer }
           }
 
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:comment_record) { create(:comment) }
+        let(:id) { comment_record.id }
         let(:vote) { { vote_type: 1 } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:comment_record) { create(:comment) }
+        let(:id) { comment_record.id }
         let(:vote) { { vote_type: 1 } }
         run_test!
       end
@@ -223,8 +263,15 @@ RSpec.describe 'Comments API', type: :request do
       response '201', 'reply created' do
         schema '$ref' => '#/components/schemas/Comment'
 
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:parent_comment) { create(:comment) }
+        let(:id) { parent_comment.id }
         let(:comment) { { comment: { content: 'Reply to your comment' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end

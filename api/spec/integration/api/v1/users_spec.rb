@@ -130,7 +130,8 @@ RSpec.describe 'Users API', type: :request do
       }
 
       response '200', 'user updated' do
-        let(:id) { 1 }
+        let!(:current_user) { create(:user) }
+        let(:id) { current_user.id }
         let(:user) do
           {
             user: {
@@ -138,18 +139,31 @@ RSpec.describe 'Users API', type: :request do
             }
           }
         end
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:user_record) { create(:user) }
+        let(:id) { user_record.id }
         let(:user) { { user: { bio: 'New bio' } } }
         run_test!
       end
 
       response '403', 'forbidden' do
-        let(:id) { 2 }
+        let!(:current_user) { create(:user) }
+        let!(:other_user) { create(:user) }
+        let(:id) { other_user.id }
         let(:user) { { user: { bio: 'New bio' } } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
+        end
+
         run_test!
       end
     end

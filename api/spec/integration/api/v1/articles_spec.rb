@@ -75,16 +75,23 @@ RSpec.describe 'Articles API', type: :request do
       }
 
       response '201', 'article created' do
+        let!(:user) { create(:user) }
+        let!(:category) { create(:category) }
         let(:article) do
           {
             article: {
               title: 'Interesting Article About Technology',
               url: 'https://example.com/article',
               description: 'A comprehensive guide to modern technology',
-              category_id: 1
+              category_id: category.id
             },
             tags: ['technology', 'programming']
           }
+        end
+
+        before do
+          # Simulate logged in user by setting session
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
         end
 
         schema '$ref' => '#/components/schemas/Article'
@@ -131,17 +138,33 @@ RSpec.describe 'Articles API', type: :request do
       security [session_auth: []]
 
       response '204', 'article deleted' do
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:article) { create(:article, user: user) }
+        let(:id) { article.id }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
         run_test!
       end
 
       response '403', 'forbidden' do
-        let(:id) { 2 }
+        let!(:user) { create(:user) }
+        let!(:other_user) { create(:user) }
+        let!(:article) { create(:article, user: other_user) }
+        let(:id) { article.id }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end
@@ -170,20 +193,35 @@ RSpec.describe 'Articles API', type: :request do
             vote_count: { type: :integer }
           }
 
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
         let(:vote) { { vote_type: 1 } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
         let(:vote) { { vote_type: 1 } }
         run_test!
       end
 
       response '400', 'invalid vote type' do
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
         let(:vote) { { vote_type: 5 } }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end
@@ -204,12 +242,20 @@ RSpec.describe 'Articles API', type: :request do
             vote_count: { type: :integer }
           }
 
-        let(:id) { 1 }
+        let!(:user) { create(:user) }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
-        let(:id) { 1 }
+        let!(:article) { create(:article) }
+        let(:id) { article.id }
         run_test!
       end
     end

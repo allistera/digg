@@ -66,11 +66,19 @@ RSpec.describe 'Categories API', type: :request do
             message: { type: :string }
           }
 
+        let!(:user) { create(:user) }
+        let!(:category) { create(:category, slug: 'technology') }
         let(:id) { 'technology' }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
+        let!(:category) { create(:category, slug: 'technology') }
         let(:id) { 'technology' }
         run_test!
       end
@@ -92,17 +100,34 @@ RSpec.describe 'Categories API', type: :request do
             message: { type: :string }
           }
 
+        let!(:user) { create(:user) }
+        let!(:category) { create(:category, slug: 'technology') }
         let(:id) { 'technology' }
+
+        before do
+          # Create subscription first, then unsubscribe
+          CategorySubscription.create!(user: user, category: category)
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
 
       response '401', 'unauthorized' do
+        let!(:category) { create(:category, slug: 'technology') }
         let(:id) { 'technology' }
         run_test!
       end
 
       response '404', 'not subscribed' do
+        let!(:user) { create(:user) }
+        let!(:category) { create(:category, slug: 'technology') }
         let(:id) { 'technology' }
+
+        before do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+        end
+
         run_test!
       end
     end
