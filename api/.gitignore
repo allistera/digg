@@ -1,0 +1,43 @@
+# Ignore bundler config and vendor directory
+/.bundle
+/vendor/bundle
+
+# Ignore database files
+/db/*.sqlite3
+/db/*.sqlite3-*
+
+# Ignore log files
+/log/*
+!/log/.keep
+
+# Ignore tmp files
+/tmp/*
+!/tmp/.keep
+!/tmp/pids
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore uploaded files
+/storage/*
+!/storage/.keep
+/public/uploads
+
+# Ignore master key for credentials
+/config/master.key
+/config/credentials/*.key
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
