@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       post 'auth/refresh', to: 'auth#refresh'
       get 'auth/me', to: 'auth#me'
 
-      resources :users, only: [:index, :show, :create, :update] do
+      resources :users, only: [:index, :show, :update] do
         member do
           get :articles
           get :comments

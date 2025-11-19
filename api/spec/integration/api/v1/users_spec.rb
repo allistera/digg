@@ -23,69 +23,6 @@ RSpec.describe 'Users API', type: :request do
         run_test!
       end
     end
-
-    post 'Create user (register)' do
-      tags 'Users'
-      description 'Register a new user account'
-      consumes 'application/json'
-      produces 'application/json'
-      parameter name: :user, in: :body, schema: {
-        type: :object,
-        properties: {
-          user: {
-            type: :object,
-            properties: {
-              username: { type: :string, minLength: 3, maxLength: 30 },
-              email: { type: :string, format: :email },
-              password: { type: :string, minLength: 6 },
-              password_confirmation: { type: :string }
-            },
-            required: [:username, :email, :password, :password_confirmation]
-          }
-        },
-        required: [:user]
-      }
-
-      response '201', 'user created' do
-        let(:user) do
-          {
-            user: {
-              username: 'john_doe',
-              email: 'john@example.com',
-              password: 'password123',
-              password_confirmation: 'password123'
-            }
-          }
-        end
-
-        schema type: :object,
-          properties: {
-            id: { type: :integer },
-            username: { type: :string },
-            email: { type: :string },
-            karma_score: { type: :integer },
-            created_at: { type: :string, format: 'date-time' }
-          }
-
-        run_test!
-      end
-
-      response '422', 'invalid request' do
-        let(:user) do
-          {
-            user: {
-              username: 'ab',
-              email: 'invalid-email',
-              password: '123',
-              password_confirmation: '456'
-            }
-          }
-        end
-
-        schema '$ref' => '#/components/schemas/Error'
-        run_test!
-      end
-    end
   end
 
   path '/api/v1/users/{id}' do

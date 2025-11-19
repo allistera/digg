@@ -285,20 +285,11 @@ async function fetchWithAuth(url, options = {}) {
 }
 ```
 
-## Migration from Session-Based Auth
+## Architecture
 
-If you were previously using session-based authentication:
+This API uses a **stateless authentication** architecture with JWT tokens:
 
-1. **Old approach** (deprecated):
-   ```http
-   POST /api/v1/users
-   Cookie: _session_id=abc123
-   ```
-
-2. **New approach** (recommended):
-   ```http
-   POST /api/v1/auth/login
-   Authorization: Bearer <jwt_token>
-   ```
-
-The session-based authentication is deprecated but still supported for backward compatibility. Please migrate to JWT authentication for better scalability and stateless architecture.
+- **No server-side sessions**: Tokens contain all necessary user information
+- **Scalable**: Works seamlessly with load balancers and multiple servers
+- **Standard**: Uses industry-standard Bearer token authentication
+- **Secure**: Tokens are signed with HS256 algorithm
