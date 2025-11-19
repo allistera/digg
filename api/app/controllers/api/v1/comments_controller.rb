@@ -97,7 +97,13 @@ module Api
       private
 
       def set_article
-        @article = Article.find(params[:article_id])
+        if params[:article_id]
+          @article = Article.find(params[:article_id])
+        elsif params[:id]
+          # For nested comments route (/comments/:id/comments), get article from parent comment
+          parent_comment = Comment.find(params[:id])
+          @article = parent_comment.article
+        end
       end
 
       def set_comment

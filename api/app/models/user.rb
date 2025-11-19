@@ -31,6 +31,14 @@ class User < ApplicationRecord
     user_activities.sum(:points)
   end
 
+  def followers_count
+    followers.count
+  end
+
+  def following_count
+    following.count
+  end
+
   private
 
   def set_defaults

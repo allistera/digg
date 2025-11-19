@@ -117,14 +117,14 @@ CREATE INDEX idx_comment_votes_user ON comment_votes(user_id);
 CREATE TABLE user_follows (
     id BIGSERIAL PRIMARY KEY,
     follower_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    following_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    followed_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(follower_id, following_id),
-    CHECK (follower_id != following_id)
+    UNIQUE(follower_id, followed_id),
+    CHECK (follower_id != followed_id)
 );
 
 CREATE INDEX idx_user_follows_follower ON user_follows(follower_id);
-CREATE INDEX idx_user_follows_following ON user_follows(following_id);
+CREATE INDEX idx_user_follows_followed ON user_follows(followed_id);
 
 -- Category subscriptions
 CREATE TABLE category_subscriptions (

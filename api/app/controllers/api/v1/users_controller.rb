@@ -34,6 +34,8 @@ module Api
 
       def update
         authenticate_user!
+        return unless current_user
+
         unless current_user == @user
           render json: { error: 'Forbidden' }, status: :forbidden
           return

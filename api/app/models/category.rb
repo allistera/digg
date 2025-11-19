@@ -18,6 +18,14 @@ class Category < ApplicationRecord
     Category.where("parent_id = ?", id)
   end
 
+  def article_count
+    articles.where(status: 'published').count
+  end
+
+  def subscriber_count
+    subscribers.count
+  end
+
   private
 
   def generate_slug
