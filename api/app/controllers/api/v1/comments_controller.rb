@@ -44,9 +44,9 @@ module Api
       end
 
       def create
-        # For nested route /comments/:id/comments, params[:id] is the parent comment
+        # For nested route /comments/:comment_id/comments, params[:comment_id] is the parent comment
         # For regular route /articles/:article_id/comments with parent_id in body, use params[:parent_id]
-        parent_id = params[:parent_id] || (params[:id] if params[:article_id].blank?)
+        parent_id = params[:parent_id] || params[:comment_id]
         parent_comment = @article.comments.find(parent_id) if parent_id
 
         @comment = @article.comments.new(comment_params)
@@ -103,9 +103,9 @@ module Api
       def set_article
         if params[:article_id]
           @article = Article.find(params[:article_id])
-        elsif params[:id]
-          # For nested comments route (/comments/:id/comments), get article from parent comment
-          parent_comment = Comment.find(params[:id])
+        elsif params[:comment_id]
+          # For nested comments route (/comments/:comment_id/comments), get article from parent comment
+          parent_comment = Comment.find(params[:comment_id])
           @article = parent_comment.article
         end
       end
