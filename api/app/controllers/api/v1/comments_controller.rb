@@ -44,7 +44,11 @@ module Api
       end
 
       def create
-        parent_comment = @article.comments.find(params[:parent_id]) if params[:parent_id]
+        # For nested route /comments/:id/comments, params[:id] is the parent comment
+        # For regular route /articles/:article_id/comments with parent_id in body, use params[:parent_id]
+        parent_id = params[:parent_id] || (params[:id] if params[:article_id].blank?)
+        parent_comment = @article.comments.find(parent_id) if parent_id
+
         @comment = @article.comments.new(comment_params)
         @comment.user = current_user
         @comment.parent = parent_comment
