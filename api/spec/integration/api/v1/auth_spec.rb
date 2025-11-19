@@ -198,6 +198,7 @@ RSpec.describe 'Authentication API', type: :request do
       tags 'Authentication'
       description 'Retrieve the authenticated user profile'
       produces 'application/json'
+      parameter name: :Authorization, in: :header, type: :string, required: true, description: 'Bearer token'
       security [bearer_auth: []]
 
       response '200', 'user profile retrieved' do
