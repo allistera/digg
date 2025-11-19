@@ -126,7 +126,8 @@ RSpec.describe 'Articles API', type: :request do
 
       response '200', 'article found' do
         schema '$ref' => '#/components/schemas/Article'
-        let(:id) { 1 }
+        let!(:test_article) { create(:article, status: 'published') }
+        let(:id) { test_article.id }
         run_test!
       end
 

@@ -39,6 +39,7 @@ RSpec.describe 'Categories API', type: :request do
 
       response '200', 'category found' do
         schema '$ref' => '#/components/schemas/Category'
+        let!(:test_category) { create(:category, slug: 'technology', name: 'Technology') }
         let(:id) { 'technology' }
         run_test!
       end
@@ -153,6 +154,7 @@ RSpec.describe 'Categories API', type: :request do
             meta: { '$ref' => '#/components/schemas/PaginationMeta' }
           }
 
+        let!(:test_category) { create(:category, slug: 'technology', name: 'Technology') }
         let(:id) { 'technology' }
         run_test!
       end

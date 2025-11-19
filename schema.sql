@@ -192,8 +192,8 @@ CREATE INDEX idx_article_tags_tag ON article_tags(tag_id);
 CREATE TABLE reports (
     id BIGSERIAL PRIMARY KEY,
     reporter_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    entity_type VARCHAR(50) NOT NULL, -- article, comment, user
-    entity_id BIGINT NOT NULL,
+    reportable_type VARCHAR(50) NOT NULL, -- Article, Comment, User
+    reportable_id BIGINT NOT NULL,
     reason VARCHAR(100) NOT NULL,
     description TEXT,
     status VARCHAR(20) DEFAULT 'pending', -- pending, resolved, dismissed
@@ -203,5 +203,5 @@ CREATE TABLE reports (
 );
 
 CREATE INDEX idx_reports_status ON reports(status);
-CREATE INDEX idx_reports_entity ON reports(entity_type, entity_id);
+CREATE INDEX idx_reports_reportable ON reports(reportable_type, reportable_id);
 CREATE INDEX idx_reports_reporter ON reports(reporter_id);

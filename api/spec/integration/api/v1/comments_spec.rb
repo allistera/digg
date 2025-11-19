@@ -35,7 +35,8 @@ RSpec.describe 'Comments API', type: :request do
             meta: { '$ref' => '#/components/schemas/PaginationMeta' }
           }
 
-        let(:article_id) { 1 }
+        let!(:test_article) { create(:article) }
+        let(:article_id) { test_article.id }
         run_test!
       end
     end
@@ -98,7 +99,8 @@ RSpec.describe 'Comments API', type: :request do
 
       response '200', 'comment found' do
         schema '$ref' => '#/components/schemas/Comment'
-        let(:id) { 1 }
+        let!(:test_comment) { create(:comment) }
+        let(:id) { test_comment.id }
         run_test!
       end
 

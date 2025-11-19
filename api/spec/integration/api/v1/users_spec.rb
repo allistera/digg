@@ -98,7 +98,8 @@ RSpec.describe 'Users API', type: :request do
 
       response '200', 'user found' do
         schema '$ref' => '#/components/schemas/User'
-        let(:id) { 1 }
+        let!(:test_user) { create(:user) }
+        let(:id) { test_user.id }
         run_test!
       end
 
@@ -189,7 +190,8 @@ RSpec.describe 'Users API', type: :request do
             meta: { '$ref' => '#/components/schemas/PaginationMeta' }
           }
 
-        let(:id) { 1 }
+        let!(:test_user) { create(:user) }
+        let(:id) { test_user.id }
         run_test!
       end
     end
@@ -215,7 +217,8 @@ RSpec.describe 'Users API', type: :request do
             meta: { '$ref' => '#/components/schemas/PaginationMeta' }
           }
 
-        let(:id) { 1 }
+        let!(:test_user) { create(:user) }
+        let(:id) { test_user.id }
         run_test!
       end
     end

@@ -34,7 +34,10 @@ module Api
 
       def update
         authenticate_user!
-        return render json: { error: 'Forbidden' }, status: :forbidden unless current_user == @user
+        unless current_user == @user
+          render json: { error: 'Forbidden' }, status: :forbidden
+          return
+        end
 
         if @user.update(user_update_params)
           render json: @user.as_json(only: [:id, :username, :email, :bio, :website_url, :avatar_url])
