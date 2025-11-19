@@ -77,7 +77,7 @@ class Article < ApplicationRecord
   def create_submit_activity
     user.user_activities.create!(
       activity_type: 'submit',
-      article: self,
+      entity: self,
       points: 1
     )
   end
@@ -85,7 +85,7 @@ class Article < ApplicationRecord
   def create_vote_activity(voter, vote_type)
     voter.user_activities.create!(
       activity_type: vote_type > 0 ? 'upvote' : 'downvote',
-      article: self,
+      entity: self,
       points: 0
     )
   end

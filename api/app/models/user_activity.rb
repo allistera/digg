@@ -1,7 +1,7 @@
 class UserActivity < ApplicationRecord
   belongs_to :user
-  belongs_to :article, optional: true
-  belongs_to :comment, optional: true
+  belongs_to :user
+  belongs_to :entity, polymorphic: true
 
   validates :activity_type, inclusion: { in: %w[submit upvote downvote comment] }
 

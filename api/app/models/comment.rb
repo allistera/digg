@@ -73,8 +73,7 @@ class Comment < ApplicationRecord
   def create_comment_activity
     user.user_activities.create!(
       activity_type: 'comment',
-      article: article,
-      comment: self,
+      entity: self,
       points: 1
     )
   end
