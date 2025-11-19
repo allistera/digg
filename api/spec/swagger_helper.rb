@@ -120,11 +120,17 @@ RSpec.configure do |config|
           }
         },
         securitySchemes: {
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer,
+            bearerFormat: 'JWT',
+            description: 'JWT Bearer token authentication'
+          },
           session_auth: {
             type: :apiKey,
             name: :_session_id,
             in: :cookie,
-            description: 'Session-based authentication'
+            description: 'Session-based authentication (deprecated, use bearer_auth)'
           }
         }
       }

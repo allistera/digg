@@ -1,14 +1,11 @@
 module RequestHelpers
-  def sign_in(user)
-    post '/api/v1/auth/login', params: {
-      email: user.email,
-      password: user.password || 'password123'
-    }
+  def auth_token_for(user)
+    JsonWebToken.encode_access_token(user.id)
   end
 
   def auth_headers(user)
-    sign_in(user)
-    { 'Cookie' => response.headers['Set-Cookie'] }
+    token = auth_token_for(user)
+    { 'Authorization' => "Bearer #{token}" }
   end
 end
 
