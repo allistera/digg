@@ -7,7 +7,7 @@ class Comment < ApplicationRecord
   has_many :comment_votes, dependent: :destroy
   has_many :reports, as: :reportable, dependent: :destroy
 
-  validates :content, presence: true, length: { minimum: 1, maximum: 10000 }
+  validates :content, presence: true, length: { minimum: 1, maximum: 10_000 }
 
   before_create :set_defaults, :set_path_and_depth
   after_create :increment_article_comment_count, :create_comment_activity

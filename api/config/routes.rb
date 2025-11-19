@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get 'feed', to: 'feed#index'
       get 'trending', to: 'articles#trending'
       get 'hot', to: 'articles#hot'
+      post 'auth/login', to: 'authentication#login'
     end
   end
 

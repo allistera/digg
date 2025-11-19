@@ -26,17 +26,18 @@ class User < ApplicationRecord
 
   scope :active, -> { where(is_active: true) }
   scope :verified, -> { where(is_verified: true) }
+  scope :ordered_by_karma, -> { order(karma_score: :desc) }
 
   def calculate_karma
     user_activities.sum(:points)
   end
 
   def followers_count
-    followers.count
+    followers.size
   end
 
   def following_count
-    following.count
+    following.size
   end
 
   private

@@ -223,6 +223,8 @@ RSpec.describe 'Authentication API', type: :request do
       end
 
       response '401', 'unauthorized' do
+        let(:Authorization) { nil }
+
         schema type: :object,
           properties: {
             error: { type: :string }
